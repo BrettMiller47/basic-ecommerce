@@ -6,7 +6,7 @@ const { Tag, Product, ProductTag } = require('../../models');
 router.get('/', async (req, res) => {
   // find all tags
   const tagData = await Tag.findAll({
-    include: [{ model: Product, through: ProductTag, as: 'product_ids' }]
+    include: [{ model: Product, through: ProductTag, as: 'product_tags' }]
   });
   
   res.json(tagData);
@@ -14,8 +14,8 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   // find a single tag by its `id`
-  const tagData = await Tag.findByPk({
-    include: [{model: Product, through: ProductTag, as: 'product_ids'}]
+  const tagData = await Tag.findByPk(req.params.id, {
+    include: [{model: Product, through: ProductTag, as: 'product_tags'}]
   });
 
   res.json(tagData);
@@ -44,7 +44,7 @@ router.delete('/:id', (req, res) => {
   // delete on tag by its `id` value
   Tag.destroy({
     where: {
-      id: req.body.id
+      id: req.params.id
     }
   }).then((deletedTag) => res.json(deletedTag));
 });
